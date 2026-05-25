@@ -1,20 +1,28 @@
 /* ═══════════════════════════════════════════════════════════
    SOCCER BRAIN — Google Sheets Logger (sheets.js)
-   
+
    SETUP INSTRUCTIONS:
    1. Go to script.google.com and create a new project
    2. Paste the Apps Script code from README.md
    3. Deploy as Web App (Anyone can access)
    4. Copy the Web App URL and paste it below as SHEETS_URL
+   5. Pick any secret token string and set it in BOTH this
+      file AND in the Apps Script (see README.md)
    ═══════════════════════════════════════════════════════════ */
 
 // ▼▼▼ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ▼▼▼
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzxmeVg1EkH6o-OwCTGgRqne2zdS0qo0GMF5yjLNB_Up4SbUfF-lzFzS85REQGOxSf22w/exec';
 // ▲▲▲ ─────────────────────────────────────────────── ▲▲▲
 
+// ▼▼▼ SET YOUR SECRET TOKEN HERE (same value goes in Apps Script) ▼▼▼
+const SHEETS_TOKEN = 'fuhjoilh37o58tgyhl3qf2';
+// ▲▲▲ ─────────────────────────────────────────────────────────── ▲▲▲
+
 /**
  * Logs a completed game session to Google Sheets.
  * Called automatically at the end of each game.
+ * Sends a secret token so the Apps Script can reject
+ * requests that didn't come from this game.
  */
 async function logToSheets(data) {
   const statusEl = document.getElementById('sheets-status');
@@ -29,6 +37,7 @@ async function logToSheets(data) {
 
   try {
     const payload = {
+      token: SHEETS_TOKEN,
       playerName: data.playerName || 'Unknown',
       date: data.date || new Date().toLocaleDateString(),
       time: data.time || new Date().toLocaleTimeString(),
