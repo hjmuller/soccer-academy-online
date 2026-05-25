@@ -6,8 +6,8 @@
    ═══════════════════════════════════════════════════════════ */
 
 // ▼▼▼ YOUR THREE AIRTABLE VALUES ▼▼▼
-const AIRTABLE_TOKEN  = 'YOUR_AIRTABLE_TOKEN_HERE';
-const AIRTABLE_BASE   = 'YOUR_BASE_ID_HERE';
+const AIRTABLE_TOKEN  = 'patdZgHrEVLatFYy9.1d1900f838eb4b44d4708a4da00b571cfc1ceb12654c1b70431a05468580733f';
+const AIRTABLE_BASE   = 'appI75ovvwFgVVtGk';
 const AIRTABLE_TABLE  = 'Game Log';
 // ▲▲▲ ──────────────────────────── ▲▲▲
 
