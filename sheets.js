@@ -9,7 +9,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 // ▼▼▼ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ▼▼▼
-const SHEETS_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzxmeVg1EkH6o-OwCTGgRqne2zdS0qo0GMF5yjLNB_Up4SbUfF-lzFzS85REQGOxSf22w/exec';
 // ▲▲▲ ─────────────────────────────────────────────── ▲▲▲
 
 /**
