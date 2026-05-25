@@ -210,8 +210,8 @@ function endGame() {
   if (accuracy >= 70) confetti();
 
   // Log to Google Sheets
-  if (typeof logToAirtable === 'function') {
-    logToAirtable({
+  if (typeof logToForms === 'function') {
+    logToForms({
       playerName: gameState.playerName,
       date: new Date().toLocaleDateString(),
       time: new Date().toLocaleTimeString(),

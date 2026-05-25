@@ -1,7 +1,7 @@
 # ⚽ Soccer Brain
 
 A fast-paced decision-making game for young soccer players.
-Built for GitHub Pages. Tracks speed & accuracy. Logs to Airtable.
+Built for GitHub Pages. Tracks speed & accuracy. Logs to Google Sheets via Google Forms.
 
 ---
 
@@ -12,7 +12,7 @@ Built for GitHub Pages. Tracks speed & accuracy. Logs to Airtable.
 | `index.html` | Main game UI |
 | `style.css` | All styling |
 | `game.js` | Game engine & logic |
-| `airtable.js` | Airtable logging |
+| `forms.js` | Google Forms logger |
 | `scenarios.json` | All game content (edit this!) |
 | `CONTENT_GUIDE.md` | How to add/edit scenarios with Claude Desktop |
 
@@ -28,104 +28,100 @@ Built for GitHub Pages. Tracks speed & accuracy. Logs to Airtable.
 
 ---
 
-## 📊 Step 2: Set Up Airtable
+## 📊 Step 2: Set Up Google Forms → Sheets
 
-### A. Create your account
+### A. Create the Form
 
-1. Go to [airtable.com](https://airtable.com) and sign up for a free account
+1. Go to [forms.google.com](https://forms.google.com)
+2. Click **Blank form**
+3. Title it: **Soccer Brain Stats**
+4. Add the following questions **in this exact order**, all as **Short answer** type:
 
-### B. Create the Base and Table
-
-1. Click **+ Add a base** → **Start from scratch**
-2. Name it **Soccer Brain**
-3. Rename the default table to **Game Log** (click the table name tab to rename)
-4. Delete all the default columns, then create these fields in this exact order:
-
-| Field Name | Field Type |
-|---|---|
-| Player Name | Single line text |
-| Date | Date |
-| Time | Single line text |
-| Score | Number |
-| Accuracy (%) | Number |
-| Avg Speed (s) | Number (set decimal places to 1) |
-| Correct Answers | Number |
-| Total Questions | Number |
-| Level | Single line text |
-| Passing (%) | Number |
-| Shooting (%) | Number |
-| Defending (%) | Number |
-| Positioning (%) | Number |
-| Awareness (%) | Number |
-| Reactions (%) | Number |
-
-### C. Get your Base ID
-
-1. With your base open, look at the URL in your browser:
-   `https://airtable.com/appXXXXXXXXXXXXXX/tblYYYYYYY/...`
-2. The Base ID is the part starting with **app** — copy it
-   Example: `appXXXXXXXXXXXXXX`
-
-### D. Create a Personal Access Token
-
-1. Go to [airtable.com/create/tokens](https://airtable.com/create/tokens)
-2. Click **+ Create new token**
-3. Name it: **Soccer Brain**
-4. Under **Scopes**, add: `data.records:write`
-5. Under **Access**, click **+ Add a base** and select your Soccer Brain base
-6. Click **Create token**
-7. **Copy the token immediately** — Airtable only shows it once!
-   It starts with `pat...`
-
-### E. Add your values to airtable.js
-
-Open `airtable.js` and fill in lines 9–10:
-
-```javascript
-const AIRTABLE_TOKEN = 'patXXXXXXXXXXXXXX';   // ← your token
-const AIRTABLE_BASE  = 'appXXXXXXXXXXXXXX';   // ← your base ID
+```
+1.  Player Name
+2.  Date
+3.  Time
+4.  Score
+5.  Accuracy
+6.  Avg Speed
+7.  Correct Answers
+8.  Total Questions
+9.  Level
+10. Passing
+11. Shooting
+12. Defending
+13. Positioning
+14. Awareness
+15. Reactions
 ```
 
-Save and upload `airtable.js` to GitHub.
+> Tip: Click the "+" button to add each question. Set type to "Short answer" for all of them. Don't mark any as required.
+
+### B. Link to a Google Sheet
+
+1. In your form, click the **Responses** tab at the top
+2. Click the green **Sheets icon** (Create spreadsheet)
+3. Choose **Create a new spreadsheet** → name it **Soccer Brain Stats**
+4. Click **Create** — this links the form to the sheet automatically
+
+### C. Get the Form Action URL
+
+1. In your form, click the **⋮ menu** (three dots, top right) → **Get pre-filled link**
+2. Fill in a dummy value in the first field (e.g. "test") → click **Get link**
+3. Copy the link — it looks like:
+   `https://docs.google.com/forms/d/e/XXXXXXXXXXXXXXXX/viewform?usp=pp_url&entry.123456789=test`
+4. Edit the copied URL:
+   - Change `/viewform` to `/formResponse`
+   - Remove everything from `?usp=` onwards
+   - Result: `https://docs.google.com/forms/d/e/XXXXXXXXXXXXXXXX/formResponse`
+5. Paste this URL into `forms.js` as `FORM_ACTION_URL`
+
+### D. Get the Entry IDs
+
+1. Right-click anywhere on your form page → **View page source** (Ctrl+U / Cmd+U)
+2. Press Ctrl+F and search for `entry.`
+3. You'll find entries like `entry.123456789` — one for each question, in order
+4. Copy each entry ID and paste into `forms.js` matching the field names:
+
+```javascript
+const FORM_FIELDS = {
+  playerName:     'entry.XXXXXXXXX',   // ← entry ID for question 1
+  date:           'entry.XXXXXXXXX',   // ← entry ID for question 2
+  time:           'entry.XXXXXXXXX',   // ← entry ID for question 3
+  score:          'entry.XXXXXXXXX',   // ← entry ID for question 4
+  accuracy:       'entry.XXXXXXXXX',   // ← entry ID for question 5
+  avgSpeed:       'entry.XXXXXXXXX',   // ← entry ID for question 6
+  correctAnswers: 'entry.XXXXXXXXX',   // ← entry ID for question 7
+  totalQuestions: 'entry.XXXXXXXXX',   // ← entry ID for question 8
+  level:          'entry.XXXXXXXXX',   // ← entry ID for question 9
+  passing:        'entry.XXXXXXXXX',   // ← entry ID for question 10
+  shooting:       'entry.XXXXXXXXX',   // ← entry ID for question 11
+  defending:      'entry.XXXXXXXXX',   // ← entry ID for question 12
+  positioning:    'entry.XXXXXXXXX',   // ← entry ID for question 13
+  awareness:      'entry.XXXXXXXXX',   // ← entry ID for question 14
+  reactions:      'entry.XXXXXXXXX',   // ← entry ID for question 15
+};
+```
+
+### E. Upload the updated forms.js to GitHub
+
+That's it — every completed game will now silently submit to your Google Form and appear as a new row in your linked spreadsheet.
 
 ---
 
-## 🎨 Step 3: Make Airtable Look Great (optional but recommended)
+## ✅ Testing It Works
 
-### Add a Gallery or color-coded Grid view:
+1. Play a full game at your GitHub Pages URL
+2. Open your linked Google Sheet
+3. You should see a new row with all the game data
 
-1. In your **Game Log** table, click **+ Add a view** → **Grid view** (already there)
-2. To color-code rows by accuracy:
-   - Click the **Color** button in the toolbar
-   - Set: color by **Accuracy (%)** field
-   - Configure: green ≥ 80, yellow ≥ 50, red below 50
-
-### Add a Summary view:
-
-1. Click **+ Add a view** → **Summary**
-   - This auto-calculates averages, max scores, totals across all columns
-
-### Add a Chart:
-
-1. Click **+ Add an extension** (top right)
-2. Add **Chart** extension
-3. Set X-axis to Date, Y-axis to Score — instant progress graph!
+If no row appears after finishing a game, double-check:
+- The `FORM_ACTION_URL` ends in `/formResponse` (not `/viewform`)
+- All 15 entry IDs are filled in correctly in `forms.js`
+- The file has been saved and re-uploaded to GitHub
 
 ---
 
-## ✏️ Step 4: Update Game Content
+## ✏️ Updating Game Content
 
 See **CONTENT_GUIDE.md** for how to add/edit scenarios using Claude Desktop.
-
----
-
-## 🛠️ Troubleshooting
-
-**"Could not save to Airtable" message in game:**
-- Check `AIRTABLE_TOKEN` and `AIRTABLE_BASE` are filled in correctly in `airtable.js`
-- Make sure your token has `data.records:write` scope
-- Make sure the token has access to your Soccer Brain base
-- Check the table name in `airtable.js` exactly matches your Airtable table name (case-sensitive)
-
-**Token security:**
-Your token is visible in `airtable.js` on GitHub. To limit exposure, the token is scoped to only write to this one base — it cannot read, delete, or access anything else in your Airtable account.
