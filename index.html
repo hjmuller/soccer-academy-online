@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soccer Brain ⚽</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ SCREENS -->
+
+<!-- SPLASH SCREEN -->
+<div id="screen-splash" class="screen active">
+  <div class="splash-bg"></div>
+  <div class="splash-content">
+    <div class="ball-bounce">⚽</div>
+    <h1 class="game-title">Soccer<br><span>Brain</span></h1>
+    <p class="tagline">Think fast. Play smart.</p>
+    <div class="stats-bar" id="splash-stats" style="display:none">
+      <div class="stat-chip">🎯 Best: <span id="splash-best">0</span></div>
+      <div class="stat-chip">🔥 Streak: <span id="splash-streak">0</span></div>
+      <div class="stat-chip">🏅 Games: <span id="splash-games">0</span></div>
+    </div>
+    <button class="btn-primary" id="btn-play">Let's Play!</button>
+    <button class="btn-secondary" id="btn-stats">My Stats 📊</button>
+  </div>
+</div>
+
+<!-- PLAYER SETUP SCREEN -->
+<div id="screen-setup" class="screen">
+  <div class="setup-content">
+    <h2>Who's Playing? 🌟</h2>
+    <div class="input-group">
+      <label for="player-name">Your Name</label>
+      <input type="text" id="player-name" placeholder="e.g. Sofia" maxlength="20" />
+    </div>
+    <div class="input-group">
+      <label>Pick Your Kit Color</label>
+      <div class="color-picker">
+        <button class="color-btn active" data-color="#e63946" style="background:#e63946"></button>
+        <button class="color-btn" data-color="#2a9d8f" style="background:#2a9d8f"></button>
+        <button class="color-btn" data-color="#f77f00" style="background:#f77f00"></button>
+        <button class="color-btn" data-color="#8338ec" style="background:#8338ec"></button>
+        <button class="color-btn" data-color="#06d6a0" style="background:#06d6a0"></button>
+        <button class="color-btn" data-color="#118ab2" style="background:#118ab2"></button>
+      </div>
+    </div>
+    <button class="btn-primary" id="btn-start-game">Kick Off! ⚽</button>
+    <button class="btn-ghost" id="btn-back-splash">← Back</button>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="screen-game" class="screen">
+  <header class="game-header">
+    <div class="hud-item">
+      <span class="hud-label">Score</span>
+      <span class="hud-value" id="hud-score">0</span>
+    </div>
+    <div class="hud-item hud-timer-wrap">
+      <span class="hud-label">Time</span>
+      <div class="timer-ring-wrap">
+        <svg class="timer-ring" viewBox="0 0 40 40">
+          <circle class="timer-ring-bg" cx="20" cy="20" r="16"/>
+          <circle class="timer-ring-fill" id="timer-circle" cx="20" cy="20" r="16"/>
+        </svg>
+        <span class="hud-value timer-number" id="hud-timer">8</span>
+      </div>
+    </div>
+    <div class="hud-item">
+      <span class="hud-label">Round</span>
+      <span class="hud-value" id="hud-round">1/10</span>
+    </div>
+  </header>
+
+  <div id="scenario-container">
+    <!-- Dynamically rendered scenarios -->
+  </div>
+
+  <div id="coach-bubble" class="coach-bubble hidden">
+    <div class="coach-avatar">🧑‍🏫</div>
+    <div class="coach-text" id="coach-text"></div>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="screen-results" class="screen">
+  <div class="results-content">
+    <div class="result-badge" id="result-badge">🏆</div>
+    <h2 id="result-title">Amazing Game!</h2>
+    <div class="score-display">
+      <span class="score-big" id="result-score">0</span>
+      <span class="score-label">points</span>
+    </div>
+    <div class="result-grid">
+      <div class="result-stat">
+        <span class="r-val" id="res-accuracy">0%</span>
+        <span class="r-lbl">Accuracy</span>
+      </div>
+      <div class="result-stat">
+        <span class="r-val" id="res-avg-time">0s</span>
+        <span class="r-lbl">Avg Speed</span>
+      </div>
+      <div class="result-stat">
+        <span class="r-val" id="res-correct">0/0</span>
+        <span class="r-lbl">Correct</span>
+      </div>
+      <div class="result-stat">
+        <span class="r-val" id="res-best">0</span>
+        <span class="r-lbl">Best Score</span>
+      </div>
+    </div>
+    <div class="level-badge" id="res-level"></div>
+    <div id="sheets-status" class="sheets-status"></div>
+    <button class="btn-primary" id="btn-play-again">Play Again! ⚽</button>
+    <button class="btn-secondary" id="btn-results-stats">View Stats 📊</button>
+    <button class="btn-ghost" id="btn-results-home">Home</button>
+  </div>
+</div>
+
+<!-- STATS SCREEN -->
+<div id="screen-stats" class="screen">
+  <div class="stats-content">
+    <h2>My Soccer Brain 📊</h2>
+    <div id="stats-player-name" class="stats-player"></div>
+    <div class="stats-cards">
+      <div class="stat-card">
+        <div class="sc-icon">🎯</div>
+        <div class="sc-val" id="st-best-score">0</div>
+        <div class="sc-lbl">Best Score</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-icon">📊</div>
+        <div class="sc-val" id="st-avg-accuracy">0%</div>
+        <div class="sc-lbl">Avg Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-icon">⚡</div>
+        <div class="sc-val" id="st-avg-speed">0s</div>
+        <div class="sc-lbl">Avg Speed</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-icon">🎮</div>
+        <div class="sc-val" id="st-total-games">0</div>
+        <div class="sc-lbl">Games Played</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-icon">🔥</div>
+        <div class="sc-val" id="st-best-streak">0</div>
+        <div class="sc-lbl">Best Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-icon">⭐</div>
+        <div class="sc-val" id="st-total-correct">0</div>
+        <div class="sc-lbl">Total Correct</div>
+      </div>
+    </div>
+    <canvas id="progress-chart" width="340" height="160"></canvas>
+    <div class="category-breakdown" id="category-breakdown"></div>
+    <button class="btn-ghost" id="btn-stats-back">← Back</button>
+    <button class="btn-danger" id="btn-clear-stats">Reset Stats</button>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="game.js"></script>
+<script src="sheets.js"></script>
+</body>
+</html>
