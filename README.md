@@ -1,7 +1,7 @@
 # ⚽ Soccer Brain
 
 A fast-paced decision-making game for young soccer players.
-Built for GitHub Pages. Tracks speed & accuracy. Logs to Google Sheets.
+Built for GitHub Pages. Tracks speed & accuracy. Logs to Airtable.
 
 ---
 
@@ -12,7 +12,7 @@ Built for GitHub Pages. Tracks speed & accuracy. Logs to Google Sheets.
 | `index.html` | Main game UI |
 | `style.css` | All styling |
 | `game.js` | Game engine & logic |
-| `sheets.js` | Google Sheets logging |
+| `airtable.js` | Airtable logging |
 | `scenarios.json` | All game content (edit this!) |
 | `CONTENT_GUIDE.md` | How to add/edit scenarios with Claude Desktop |
 
@@ -28,127 +28,104 @@ Built for GitHub Pages. Tracks speed & accuracy. Logs to Google Sheets.
 
 ---
 
-## 📊 Step 2: Set Up Google Sheets Logging
+## 📊 Step 2: Set Up Airtable
 
-### A. Create the Spreadsheet
+### A. Create your account
 
-1. Go to [sheets.google.com](https://sheets.google.com) and create a new spreadsheet
-2. Name it **Soccer Brain Stats**
-3. In Row 1, add these headers exactly:
+1. Go to [airtable.com](https://airtable.com) and sign up for a free account
 
-```
-Timestamp | Player Name | Date | Time | Score | Accuracy (%) | Avg Response Time (s) | Correct Answers | Total Questions | Level | Category Breakdown
-```
+### B. Create the Base and Table
 
-### B. Create the Apps Script
+1. Click **+ Add a base** → **Start from scratch**
+2. Name it **Soccer Brain**
+3. Rename the default table to **Game Log** (click the table name tab to rename)
+4. Delete all the default columns, then create these fields in this exact order:
 
-1. In your spreadsheet, go to **Extensions → Apps Script**
-2. Delete all existing code and paste this:
+| Field Name | Field Type |
+|---|---|
+| Player Name | Single line text |
+| Date | Date |
+| Time | Single line text |
+| Score | Number |
+| Accuracy (%) | Number |
+| Avg Speed (s) | Number (set decimal places to 1) |
+| Correct Answers | Number |
+| Total Questions | Number |
+| Level | Single line text |
+| Passing (%) | Number |
+| Shooting (%) | Number |
+| Defending (%) | Number |
+| Positioning (%) | Number |
+| Awareness (%) | Number |
+| Reactions (%) | Number |
 
-```javascript
-function doPost(e) {
-  try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    const data = JSON.parse(e.postData.contents);
-    
-    sheet.appendRow([
-      new Date().toLocaleString(),
-      data.playerName,
-      data.date,
-      data.time,
-      data.score,
-      data.accuracy,
-      data.avgResponseTime,
-      data.correctAnswers,
-      data.totalQuestions,
-      data.level,
-      data.categoryBreakdown
-    ]);
-    
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: 'ok' }))
-      .setMimeType(ContentService.MimeType.JSON);
-      
-  } catch(err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: 'error', message: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
+### C. Get your Base ID
 
-function doGet(e) {
-  return ContentService
-    .createTextOutput('Soccer Brain Sheets Logger is running!')
-    .setMimeType(ContentService.MimeType.TEXT);
-}
-```
+1. With your base open, look at the URL in your browser:
+   `https://airtable.com/appXXXXXXXXXXXXXX/tblYYYYYYY/...`
+2. The Base ID is the part starting with **app** — copy it
+   Example: `appXXXXXXXXXXXXXX`
 
-3. Click **Save** (name the project anything, e.g. "Soccer Brain Logger")
+### D. Create a Personal Access Token
 
-### C. Deploy the Web App
+1. Go to [airtable.com/create/tokens](https://airtable.com/create/tokens)
+2. Click **+ Create new token**
+3. Name it: **Soccer Brain**
+4. Under **Scopes**, add: `data.records:write`
+5. Under **Access**, click **+ Add a base** and select your Soccer Brain base
+6. Click **Create token**
+7. **Copy the token immediately** — Airtable only shows it once!
+   It starts with `pat...`
 
-1. Click **Deploy → New Deployment**
-2. Click the gear icon next to "Type" and select **Web app**
-3. Set:
-   - **Description**: Soccer Brain Logger
-   - **Execute as**: Me
-   - **Who has access**: Anyone
-4. Click **Deploy**
-5. Click **Authorize access** and follow the prompts
-6. **Copy the Web App URL** — it looks like:
-   `https://script.google.com/macros/s/XXXXXXX/exec`
+### E. Add your values to airtable.js
 
-### D. Add the URL to the Game
-
-1. Open `sheets.js` in a text editor
-2. Replace `YOUR_GOOGLE_APPS_SCRIPT_URL_HERE` with your copied URL:
+Open `airtable.js` and fill in lines 9–10:
 
 ```javascript
-const SHEETS_URL = 'https://script.google.com/macros/s/YOUR_ACTUAL_ID/exec';
+const AIRTABLE_TOKEN = 'patXXXXXXXXXXXXXX';   // ← your token
+const AIRTABLE_BASE  = 'appXXXXXXXXXXXXXX';   // ← your base ID
 ```
 
-3. Save and re-upload `sheets.js` to GitHub
+Save and upload `airtable.js` to GitHub.
 
 ---
 
-## ✏️ Step 3: Update Game Content with Claude Desktop
+## 🎨 Step 3: Make Airtable Look Great (optional but recommended)
 
-See **CONTENT_GUIDE.md** for full instructions on using Claude Desktop to add and edit scenarios.
+### Add a Gallery or color-coded Grid view:
 
-The short version:
-1. Open `scenarios.json` in Claude Desktop
-2. Ask Claude to add, change, or remove scenarios
-3. Save the file and upload it to GitHub
+1. In your **Game Log** table, click **+ Add a view** → **Grid view** (already there)
+2. To color-code rows by accuracy:
+   - Click the **Color** button in the toolbar
+   - Set: color by **Accuracy (%)** field
+   - Configure: green ≥ 80, yellow ≥ 50, red below 50
 
----
+### Add a Summary view:
 
-## 🎮 How the Game Works
+1. Click **+ Add a view** → **Summary**
+   - This auto-calculates averages, max scores, totals across all columns
 
-- **8 scenarios per game**, randomly selected each time
-- **3 types of challenges**:
-  - **Choice** — Pick the best tactical decision from 4 options
-  - **Spot** — Tap the most open or most dangerous player
-  - **Reaction** — Tap the green light, ignore the red!
-- **Scoring**: 50 base points + up to 50 speed bonus + streak bonus
-- **Timer**: Gets faster as you progress through levels
-- **Levels**: Grasshopper → Striker → Champion (based on score)
-- Stats are saved locally and logged to Google Sheets after each game
+### Add a Chart:
+
+1. Click **+ Add an extension** (top right)
+2. Add **Chart** extension
+3. Set X-axis to Date, Y-axis to Score — instant progress graph!
 
 ---
 
-## 📱 Device Support
+## ✏️ Step 4: Update Game Content
 
-Works on mobile, tablet, and desktop. Best on a phone or tablet for the tap interactions.
+See **CONTENT_GUIDE.md** for how to add/edit scenarios using Claude Desktop.
 
 ---
 
 ## 🛠️ Troubleshooting
 
-**Game doesn't load scenarios**: Make sure `scenarios.json` is in the same folder as `index.html`. GitHub Pages serves files relative to the repo root.
+**"Could not save to Airtable" message in game:**
+- Check `AIRTABLE_TOKEN` and `AIRTABLE_BASE` are filled in correctly in `airtable.js`
+- Make sure your token has `data.records:write` scope
+- Make sure the token has access to your Soccer Brain base
+- Check the table name in `airtable.js` exactly matches your Airtable table name (case-sensitive)
 
-**Google Sheets not logging**: 
-- Check the URL in `sheets.js` is correct
-- Make sure you deployed with "Anyone" access
-- Try opening the Web App URL directly in a browser — it should show "Soccer Brain Sheets Logger is running!"
-
-**Timer not showing**: The timer ring uses SVG. Make sure `style.css` is loading correctly.
+**Token security:**
+Your token is visible in `airtable.js` on GitHub. To limit exposure, the token is scoped to only write to this one base — it cannot read, delete, or access anything else in your Airtable account.
