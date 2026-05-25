@@ -11,21 +11,21 @@ const FORM_ACTION_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSe6Mb3rQPibTD5
 
 // ▼▼▼ PASTE YOUR ENTRY IDs HERE (from README.md instructions) ▼▼▼
 const FORM_FIELDS = {
-  playerName:      'entry.XXXXXXXXX',
-  date:            'entry.XXXXXXXXX',
-  time:            'entry.XXXXXXXXX',
-  score:           'entry.XXXXXXXXX',
-  accuracy:        'entry.XXXXXXXXX',
-  avgSpeed:        'entry.XXXXXXXXX',
-  correctAnswers:  'entry.XXXXXXXXX',
-  totalQuestions:  'entry.XXXXXXXXX',
-  level:           'entry.XXXXXXXXX',
-  passing:         'entry.XXXXXXXXX',
-  shooting:        'entry.XXXXXXXXX',
-  defending:       'entry.XXXXXXXXX',
-  positioning:     'entry.XXXXXXXXX',
-  awareness:       'entry.XXXXXXXXX',
-  reactions:       'entry.XXXXXXXXX',
+  playerName:      'entry.683914709',
+  date:            'entry.268042596',
+  time:            'entry.1325386389',
+  score:           'entry.226234346',
+  accuracy:        'entry.1008079740',
+  avgSpeed:        'entry.1657482745',
+  correctAnswers:  'entry.473226490',
+  totalQuestions:  'entry.1193165009',
+  level:           'entry.1558213197',
+  passing:         'entry.666758379',
+  shooting:        'entry.184191762',
+  defending:       'entry.1513703087',
+  positioning:     'entry.780178879',
+  awareness:       'entry.528681445',
+  reactions:       'entry.1768554015',
 };
 // ▲▲▲ ──────────────────────────────────────── ▲▲▲
 
