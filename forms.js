@@ -6,7 +6,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 // ▼▼▼ PASTE YOUR GOOGLE FORM ACTION URL HERE ▼▼▼
-const FORM_ACTION_URL = 'YOUR_FORM_ACTION_URL_HERE';
+const FORM_ACTION_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSe6Mb3rQPibTD5s_9h5WnDB2YLD8kPHZvp3XoJ9RTWQ4nNORQ/formResponse';
 // ▲▲▲ ─────────────────────────────────────── ▲▲▲
 
 // ▼▼▼ PASTE YOUR ENTRY IDs HERE (from README.md instructions) ▼▼▼
