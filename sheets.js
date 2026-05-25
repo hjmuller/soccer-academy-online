@@ -11,7 +11,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 // ▼▼▼ PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ▼▼▼
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxfrtgiTDXroAthjX_3cB7jHb00b12B-ZmV3rjVhQz5vrXarsKq7X0KAc5Pl7G12so5TQ/exec';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzNSSTae5YNYuJRhjzV-IPjAC_nQddqkJe6mHQQEjBxDIhCg9XjUNuyB9tCYNt2BX8zcA/exec';
 // ▲▲▲ ─────────────────────────────────────────────── ▲▲▲
 
 // ▼▼▼ SET YOUR SECRET TOKEN HERE (same value goes in Apps Script) ▼▼▼
