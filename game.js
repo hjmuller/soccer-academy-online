@@ -24,7 +24,7 @@ let gameState = {
   roundStartTime: 0,
   timer: null,
   timerValue: 0,
-  timerMax: 8,
+  timerMax: 10,
   answered: false,
   streak: 0,
   categoryStats: {}
@@ -151,7 +151,7 @@ function nextRound() {
 
   // Get time limit from level config or scenario
   const level = getCurrentLevel();
-  gameState.timerMax = scenario.timeLimit || level.timeLimit || 8;
+  gameState.timerMax = scenario.timeLimit || level.timeLimit || 10;
   gameState.roundStartTime = Date.now();
 
   renderScenario(scenario);
