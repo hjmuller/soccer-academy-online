@@ -325,8 +325,8 @@ body::before {
 .scenario-card {
   background: var(--card-bg);
   border-radius: var(--radius);
-  padding: 20px;
-  width: 100%; max-width: 420px;
+  padding: 16px;
+  width: 100%; max-width: 520px;
   box-shadow: var(--shadow);
   animation: cardIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
@@ -362,13 +362,15 @@ body::before {
   position: relative;
   border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   border: 2px solid rgba(0,0,0,0.08);
+  min-height: 200px;
 }
 
 .field-svg {
   width: 100%;
   display: block;
+  min-height: 200px;
 }
 
 /* ── CHOICES ── */
@@ -690,7 +692,7 @@ body::before {
 .player-you { fill: var(--player-color); }
 .player-team { fill: #4a90d9; }
 .player-enemy { fill: #888; }
-.player-label { font-size: 9px; font-weight: 800; fill: white; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.player-label { font-size: 11px; font-weight: 800; fill: white; text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
 .ball-icon { font-size: 14px; }
 
 /* ══════════════════════════════════════════════
@@ -737,10 +739,11 @@ body::before {
    MOBILE OPTIMIZATIONS
 ══════════════════════════════════════════════ */
 @media (max-height: 700px) {
-  .scenario-card { padding: 14px; }
-  .scenario-question { font-size: 14px; margin-bottom: 10px; }
-  .choice-btn { padding: 8px 10px; font-size: 12px; }
-  .field-wrap { margin-bottom: 10px; }
+  .scenario-card { padding: 10px; }
+  .scenario-question { font-size: 13px; margin-bottom: 8px; }
+  .choice-btn { padding: 7px 9px; font-size: 12px; }
+  .field-wrap { margin-bottom: 8px; min-height: 160px; }
+  .field-svg { min-height: 160px; }
 }
 
 @media (max-width: 360px) {

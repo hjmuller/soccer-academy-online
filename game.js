@@ -451,7 +451,7 @@ function renderReactionScenario(scenario) {
 // FIELD SVG RENDERER
 // ═══════════════════════════════════════════════════════════
 function renderFieldSVG(setup, clickable = false, correctId = null) {
-  const W = 300, H = 200;
+  const W = 420, H = 280;
 
   const toX = x => (x / 100) * W;
   const toY = y => (y / 100) * H;
@@ -479,7 +479,7 @@ function renderFieldSVG(setup, clickable = false, correctId = null) {
   // Ball
   if (setup.ballPosition) {
     const bx = toX(setup.ballPosition.x), by = toY(setup.ballPosition.y);
-    svg += `<circle cx="${bx}" cy="${by}" r="5" fill="white" stroke="#333" stroke-width="1"/>
+    svg += `<circle cx="${bx}" cy="${by}" r="7" fill="white" stroke="#333" stroke-width="1.5"/>
     <text x="${bx}" y="${by+1}" text-anchor="middle" dominant-baseline="middle" font-size="8">⚽</text>`;
   }
 
@@ -488,7 +488,7 @@ function renderFieldSVG(setup, clickable = false, correctId = null) {
     const x = toX(d.x), y = toY(d.y);
     const isGK = d.label === 'GK';
     const col = isGK ? '#f0a500' : '#888';
-    svg += `<circle cx="${x}" cy="${y}" r="10" fill="${col}" stroke="white" stroke-width="1.5"/>
+    svg += `<circle cx="${x}" cy="${y}" r="14" fill="${col}" stroke="white" stroke-width="2"/>
     <text x="${x}" y="${y}" class="player-label">${d.label}</text>`;
   });
 
@@ -496,10 +496,10 @@ function renderFieldSVG(setup, clickable = false, correctId = null) {
   (setup.teammates || []).forEach((t, i) => {
     const x = toX(t.x), y = toY(t.y);
     const isOpen = t.isOpen;
-    const glow = isOpen ? `<circle cx="${x}" cy="${y}" r="14" fill="rgba(100,220,150,0.25)"/>` : '';
+    const glow = isOpen ? `<circle cx="${x}" cy="${y}" r="20" fill="rgba(100,220,150,0.25)"/>` : '';
     const extra = clickable ? `data-player-id="${t.id}"` : '';
     svg += `${glow}<g ${extra} class="${clickable ? 'clickable-player' : ''}">
-      <circle cx="${x}" cy="${y}" r="10" fill="#4a90d9" stroke="white" stroke-width="1.5"/>
+      <circle cx="${x}" cy="${y}" r="14" fill="#4a90d9" stroke="white" stroke-width="2"/>
       <text x="${x}" y="${y}" class="player-label">${t.label}</text>
     </g>`;
   });
@@ -514,8 +514,8 @@ function renderFieldSVG(setup, clickable = false, correctId = null) {
     if (d.id) {
       // Redraw with clickable wrapper
       svg = svg.replace(
-        `<circle cx="${x}" cy="${y}" r="10" fill="${col}" stroke="white" stroke-width="1.5"/>\n    <text x="${x}" y="${y}" class="player-label">${d.label}</text>`,
-        `<g ${extra}><circle cx="${x}" cy="${y}" r="10" fill="${col}" stroke="white" stroke-width="1.5"/><text x="${x}" y="${y}" class="player-label">${d.label}</text></g>`
+        `<circle cx="${x}" cy="${y}" r="14" fill="${col}" stroke="white" stroke-width="2"/>\n    <text x="${x}" y="${y}" class="player-label">${d.label}</text>`,
+        `<g ${extra}><circle cx="${x}" cy="${y}" r="14" fill="${col}" stroke="white" stroke-width="2"/><text x="${x}" y="${y}" class="player-label">${d.label}</text></g>`
       );
     }
   });
@@ -523,8 +523,8 @@ function renderFieldSVG(setup, clickable = false, correctId = null) {
   // Your player
   if (setup.yourPlayer) {
     const x = toX(setup.yourPlayer.x), y = toY(setup.yourPlayer.y);
-    svg += `<circle cx="${x}" cy="${y}" r="11" fill="var(--player-color)" stroke="white" stroke-width="2"/>
-    <text x="${x}" y="${y}" class="player-label" style="font-size:7px">YOU</text>`;
+    svg += `<circle cx="${x}" cy="${y}" r="15" fill="var(--player-color)" stroke="white" stroke-width="2.5"/>
+    <text x="${x}" y="${y}" class="player-label" style="font-size:9px">YOU</text>`;
   }
 
   // Direction arrows (only in choice mode, subtle)
