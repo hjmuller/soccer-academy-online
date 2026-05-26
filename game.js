@@ -3,7 +3,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 const STORAGE_KEY = 'soccerbrain_stats';
-const SCENARIOS_PER_GAME = 8;
+const SCENARIOS_PER_GAME = 18;
 const CIRCUMFERENCE = 100.53; // 2 * π * 16
 
 // ── State ──────────────────────────────────────────────────
