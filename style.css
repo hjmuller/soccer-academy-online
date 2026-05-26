@@ -726,7 +726,26 @@ body::before {
   100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
 }
 
-/* Tap feedback pulse */
+/* ── SKIP BUTTON ── */
+.btn-skip {
+  display: block;
+  margin: 10px auto 0;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  border-radius: 20px;
+  padding: 7px 22px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.5px;
+}
+.btn-skip:hover {
+  background: rgba(255,255,255,0.22);
+  color: white;
+}
 .tap-pulse {
   animation: tapPulse 0.2s ease;
 }

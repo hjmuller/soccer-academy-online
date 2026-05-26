@@ -19,6 +19,7 @@ let gameState = {
   currentScenario: null,
   gameScenarios: [],
   correctCount: 0,
+  skipCount: 0,
   responseTimes: [],
   roundStartTime: 0,
   timer: null,
@@ -122,6 +123,7 @@ function startGame() {
   gameState.score = 0;
   gameState.round = 0;
   gameState.correctCount = 0;
+  gameState.skipCount = 0;
   gameState.responseTimes = [];
   gameState.streak = 0;
   gameState.categoryStats = {};
@@ -156,6 +158,16 @@ function nextRound() {
   startTimer(gameState.timerMax);
 }
 
+function skipRound() {
+  if (gameState.answered) return;
+  gameState.answered = true;
+  gameState.skipCount++;
+  gameState.streak = 0;
+  clearTimer();
+  coachBubble.classList.add('hidden');
+  nextRound();
+}
+
 function endGame() {
   clearTimer();
   const total = gameState.gameScenarios.length;
@@ -188,6 +200,7 @@ function endGame() {
   document.getElementById('res-avg-time').textContent = avgTime + 's';
   document.getElementById('res-correct').textContent = `${correct}/${total}`;
   document.getElementById('res-best').textContent = stats.bestScore;
+  document.getElementById('res-skips').textContent = gameState.skipCount;
 
   const titles = [
     [90, '🌟 World Class!'],
@@ -237,6 +250,13 @@ function renderScenario(scenario) {
   if (scenario.type === 'choice') renderChoiceScenario(scenario);
   else if (scenario.type === 'spot') renderSpotScenario(scenario);
   else if (scenario.type === 'reaction') renderReactionScenario(scenario);
+
+  // Inject skip button below scenario
+  const skipBtn = document.createElement('button');
+  skipBtn.className = 'btn-skip';
+  skipBtn.textContent = 'Skip ›';
+  skipBtn.onclick = skipRound;
+  scenarioContainer.appendChild(skipBtn);
 }
 
 // ── CHOICE scenario ────────────────────────────────────────
