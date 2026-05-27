@@ -589,7 +589,7 @@
 /* ═══════════════════════════════════════════════════════════
    CONFIGURATION — paste your published CSV URL here
    ═══════════════════════════════════════════════════════════ */
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTd3eBcyrAm8ctH_fvsElO8UUF_bWOH3ywJIk1-Zpnk0J7-fRp11_ndTJVVZJRIeRiWiLjg6X_mAFzz/pub?gid=900258406&single=true&output=csv';
+const SHEET_CSV_URL = 'PASTE_YOUR_CSV_URL_HERE';
 
 /* ═══════════════════════════════════════════════════════════
    STATE
@@ -623,21 +623,37 @@ async function loadData() {
     return;
   }
 
-  try {
-    // Use a CORS proxy to fetch the public CSV
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(SHEET_CSV_URL)}`;
-    const res = await fetch(proxyUrl);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
-    allRows = parseCSV(text);
-    filtered = [...allRows];
-    updateSummary();
-    applyFilters();
-  } catch (err) {
-    showError(err.message);
-  } finally {
-    btn.classList.remove('spinning');
+  // Try multiple CORS proxies in sequence — desktop browsers can block specific ones
+  const proxies = [
+    url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    url => `https://thingproxy.freeboard.io/fetch/${url}`,
+  ];
+
+  let lastErr = null;
+  for (const makeProxy of proxies) {
+    try {
+      const proxyUrl = makeProxy(SHEET_CSV_URL);
+      const res = await fetch(proxyUrl, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      // Sanity check — a valid CSV will have commas
+      if (!text.includes(',')) throw new Error('Response does not look like CSV');
+      allRows = parseCSV(text);
+      filtered = [...allRows];
+      updateSummary();
+      applyFilters();
+      btn.classList.remove('spinning');
+      return; // success — stop trying
+    } catch (err) {
+      lastErr = err;
+      // Try next proxy
+    }
   }
+
+  // All proxies failed
+  showError(`All fetch attempts failed. Last error: ${lastErr?.message}. Make sure your Sheet is published as CSV (File → Share → Publish to web).`);
+  btn.classList.remove('spinning');
 }
 
 function parseCSV(text) {
