@@ -623,36 +623,36 @@ async function loadData() {
     return;
   }
 
-  // Try multiple CORS proxies in sequence — desktop browsers can block specific ones
-  const proxies = [
-    url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    url => `https://thingproxy.freeboard.io/fetch/${url}`,
+  showLoading();
+
+  // Google's published CSV supports direct fetch — try that first, then proxies
+  const attempts = [
+    url => url,                                                              // 1. direct
+    url => `https://corsproxy.io/?${encodeURIComponent(url)}`,              // 2. corsproxy
+    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`, // 3. allorigins
   ];
 
   let lastErr = null;
-  for (const makeProxy of proxies) {
+  for (const makeUrl of attempts) {
     try {
-      const proxyUrl = makeProxy(SHEET_CSV_URL);
-      const res = await fetch(proxyUrl, { cache: 'no-store' });
+      const fetchUrl = makeUrl(SHEET_CSV_URL);
+      const res = await fetch(fetchUrl, { cache: 'no-store', mode: 'cors' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const text = await res.text();
-      // Sanity check — a valid CSV will have commas
-      if (!text.includes(',')) throw new Error('Response does not look like CSV');
+      if (text.trim().length < 10) throw new Error('Empty response');
+      if (text.trim().startsWith('<')) throw new Error('Got HTML instead of CSV — sheet may not be published');
       allRows = parseCSV(text);
       filtered = [...allRows];
       updateSummary();
       applyFilters();
       btn.classList.remove('spinning');
-      return; // success — stop trying
+      return;
     } catch (err) {
       lastErr = err;
-      // Try next proxy
     }
   }
 
-  // All proxies failed
-  showError(`All fetch attempts failed. Last error: ${lastErr?.message}. Make sure your Sheet is published as CSV (File → Share → Publish to web).`);
+  showError(lastErr?.message || 'Unknown error');
   btn.classList.remove('spinning');
 }
 
@@ -1025,6 +1025,21 @@ function emptyHtml(msg) {
   return `<div class="state-box"><div class="state-icon">🔍</div><h3>No Results</h3><p>${msg}</p></div>`;
 }
 
+function showLoading() {
+  const html = `<tr><td colspan="10"><div class="state-box">
+    <div class="state-icon">⚽</div>
+    <h3>Loading<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></h3>
+    <p>Fetching data from Google Sheets</p>
+  </div></td></tr>`;
+  document.getElementById('leaderboard-body').innerHTML = html;
+  document.getElementById('sessions-body').innerHTML = html;
+  document.getElementById('player-grid').innerHTML = `<div style="grid-column:1/-1"><div class="state-box">
+    <div class="state-icon">⚽</div>
+    <h3>Loading<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></h3>
+  </div></div>`;
+  document.getElementById('podium-row').innerHTML = '';
+}
+
 function showNotConfigured() {
   const views = ['leaderboard-body','sessions-body','player-grid'];
   const html = `
@@ -1047,7 +1062,13 @@ function showError(msg) {
     <div class="state-box">
       <div class="state-icon">⚠️</div>
       <h3>Couldn't load data</h3>
-      <p>Make sure your Google Sheet is published as a CSV and the URL in <code>SHEET_CSV_URL</code> is correct.<br><br><small style="color:var(--red)">${esc(msg)}</small></p>
+      <p>
+        Most likely your Google Sheet isn't published yet, or the URL is wrong.<br><br>
+        <strong>To fix:</strong> Open your Google Sheet → <strong>File → Share → Publish to web</strong>
+        → select your sheet tab → choose <strong>CSV</strong> → click <strong>Publish</strong>
+        → copy that URL into <code>SHEET_CSV_URL</code> in this file.<br><br>
+        <small style="color:var(--red)">Error: ${esc(msg)}</small>
+      </p>
     </div>
   `;
   document.getElementById('leaderboard-body').innerHTML = `<tr><td colspan="10">${html}</td></tr>`;
